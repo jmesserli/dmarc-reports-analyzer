@@ -24,6 +24,8 @@ jaxb {
 
     xjc {
         generatePackage = 'nu.peg.dmarc.xsd'
+        taskClassname = 'org.jvnet.jaxb2_commons.xjc.XJC2Task'
+        args = ['-XtoString']
     }
 }
 
@@ -41,9 +43,13 @@ repositories {
 }
 
 dependencies {
+    compile 'org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.11.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
+    jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.11.1'
+    jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics-tools:0.11.1'
+    jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics:0.11.1'
     jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
     jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
     jaxb 'javax.xml.bind:jaxb-api:2.2.7'

@@ -1,30 +1,48 @@
 package nu.peg.dmarc
 
 import nu.peg.dmarc.xsd.Feedback
+import org.xml.sax.Attributes
+import org.xml.sax.InputSource
+import org.xml.sax.helpers.XMLFilterImpl
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.stream.Collectors
 import javax.xml.XMLConstants
 import javax.xml.bind.JAXBContext
+import javax.xml.parsers.SAXParserFactory
 import javax.xml.validation.SchemaFactory
 
-class App {
-    fun main(args: Array<String>) {
-        val schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-        val schemaUrl = javaClass.getResource("schema/dmarc.xsd")
-        val schema = schemaFactory.newSchema(schemaUrl)
+class App
+const val NAMESPACE = "http://dmarc.org/dmarc-xml/0.1/rua.xsd"
 
-        val ctx = JAXBContext.newInstance(Feedback::class.java)
-        val unmarshaller = ctx.createUnmarshaller()
-        unmarshaller.schema = schema
+fun main(args: Array<String>) {
+    val schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+    val schemaUrl = App::class.java.getResource("/schema/dmarc.xsd")
+    val schema = schemaFactory.newSchema(schemaUrl)
 
-        val reportsFolder = Paths.get("reports/")
-        val xmls = Files.list(reportsFolder)
-                .map { Files.readAllLines(it) }
-                .map { it.stream().collect(Collectors.joining("\n")) }
-                .collect(Collectors.toList())
+    val context = JAXBContext.newInstance(Feedback::class.java)
+    val namespaceFilter = NamespaceFilter(NAMESPACE)
+    namespaceFilter.parent = SAXParserFactory.newInstance().newSAXParser().xmlReader
 
-        for (xml in xmls) {
-        }
+    // Set UnmarshallerHandler as ContentHandler on XMLFilter
+    val unmarshaller = context.createUnmarshaller()
+    unmarshaller.schema = schema
+    namespaceFilter.contentHandler = unmarshaller.unmarshallerHandler
+
+    val reportsFolder = Paths.get("reports/")
+    val feedbackList = Files.list(reportsFolder).map {
+        namespaceFilter.parse(InputSource(Files.newInputStream(it)))
+        unmarshaller.unmarshallerHandler.result as Feedback
+    }
+
+    feedbackList.forEach { println(it) }
+}
+
+class NamespaceFilter(val namespace: String) : XMLFilterImpl() {
+    override fun startElement(uri: String?, localName: String?, qName: String?, atts: Attributes?) {
+        super.startElement(namespace, localName, qName, atts)
+    }
+
+    override fun endElement(uri: String?, localName: String?, qName: String?) {
+        super.endElement(namespace, localName, qName)
     }
 }

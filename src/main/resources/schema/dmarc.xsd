@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:this="http://dmarc.org/dmarc-xml/0.1/rua.xsd"
-           targetNamespace="http://dmarc.org/dmarc-xml/0.1/rua.xsd">
+           targetNamespace="http://dmarc.org/dmarc-xml/0.1/rua.xsd"
+           elementFormDefault="qualified">
 
     <xs:complexType name="DateRangeType">
         <xs:all>
@@ -64,6 +65,8 @@
             <xs:enumeration value="forwarded"/>
             <xs:enumeration value="sampled_out"/>
             <xs:enumeration value="trusted_forwarder"/>
+            <!--This seems to be common, added it manually-->
+            <xs:enumeration value="local_policy"/>
             <xs:enumeration value="other"/>
         </xs:restriction>
     </xs:simpleType>
@@ -83,9 +86,8 @@
     </xs:complexType>
     <xs:simpleType name="IPAddress">
         <xs:restriction base="xs:string">
-            <xs:pattern value="((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]).){3}
-                   (1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])|
-                   ([A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}"/>
+            <xs:pattern
+                    value="((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]).){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])|([A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}"/>
         </xs:restriction>
     </xs:simpleType>
 
