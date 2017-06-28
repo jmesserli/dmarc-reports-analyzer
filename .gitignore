@@ -1,7 +1,4 @@
-reports/
-src/main/java/nu/peg/dmarc/xsd/
 .idea/
 .gradle/
-gradle/
 build/
-schema/episodes/
+out/

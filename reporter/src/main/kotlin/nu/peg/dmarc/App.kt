@@ -1,6 +1,7 @@
 package nu.peg.dmarc
 
-import nu.peg.dmarc.xsd.Feedback
+import nu.peg.dmarc.xsd.DmarcSchemaXsd
+import nu.peg.dmarc.xsd.schema.Feedback
 import org.xml.sax.Attributes
 import org.xml.sax.InputSource
 import org.xml.sax.helpers.XMLFilterImpl
@@ -11,12 +12,11 @@ import javax.xml.bind.JAXBContext
 import javax.xml.parsers.SAXParserFactory
 import javax.xml.validation.SchemaFactory
 
-class App
 const val NAMESPACE = "http://dmarc.org/dmarc-xml/0.1/rua.xsd"
 
 fun main(args: Array<String>) {
     val schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-    val schemaUrl = App::class.java.getResource("/schema/dmarc.xsd")
+    val schemaUrl = DmarcSchemaXsd.getDmarcSchema()
     val schema = schemaFactory.newSchema(schemaUrl)
 
     val context = JAXBContext.newInstance(Feedback::class.java)

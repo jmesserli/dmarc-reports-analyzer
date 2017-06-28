@@ -1,2 +1,5 @@
 rootProject.name = 'report-analyzer'
 
+include 'schema'
+include 'reporter'
+include 'mail'

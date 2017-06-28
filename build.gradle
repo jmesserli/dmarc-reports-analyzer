@@ -1,56 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.1.1'
-
-    repositories {
-        maven { url 'https://pkg.pegnu.cloud/repostory/m2' }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-plugins {
-    id 'com.github.jacobono.jaxb' version '1.3.5'
+    ext.kotlin_version = '1.1.3'
 }
 
 group 'nu.peg.dmarc'
 version '1.0-SNAPSHOT'
-
-apply plugin: 'java'
-apply plugin: 'kotlin'
-
-jaxb {
-    xsdDir = 'src/main/resources/schema'
-
-    xjc {
-        generatePackage = 'nu.peg.dmarc.xsd'
-        taskClassname = 'org.jvnet.jaxb2_commons.xjc.XJC2Task'
-        args = ['-XtoString']
-    }
-}
-
-compileJava.dependsOn += xjc
-
-task cleanSchemas() {
-    delete('src/main/java/nu/peg/dmarc/xsd')
-}
-clean.dependsOn += cleanSchemas
-
-sourceCompatibility = 1.8
-
-repositories {
-    maven { url 'https://pkg.pegnu.cloud/repository/m2' }
-}
-
-dependencies {
-    compile 'org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.11.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.11.1'
-    jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics-tools:0.11.1'
-    jaxb 'org.jvnet.jaxb2_commons:jaxb2-basics:0.11.1'
-    jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
-    jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
-    jaxb 'javax.xml.bind:jaxb-api:2.2.7'
-}
